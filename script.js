@@ -1,6 +1,5 @@
 const boardElem = document.getElementById("board");
 const sizeSelect = document.getElementById("sizeSelect");
-let boardSize = parseInt(sizeSelect.value, 10);
 let currentDifficulty = "easy";
 
 sizeSelect.addEventListener("change", () => {
@@ -17,7 +16,7 @@ function emptyBoard(size) {
 
 function generatePuzzle(difficulty = currentDifficulty) {
   currentDifficulty = difficulty;
-  boardSize = parseInt(sizeSelect.value, 10);
+  const boardSize = parseInt(sizeSelect.value, 10);
   let puzzle = PUZZLES[currentDifficulty];
   if (!puzzle || puzzle.length !== boardSize) {
     puzzle = emptyBoard(boardSize);
@@ -40,3 +39,6 @@ function generatePuzzle(difficulty = currentDifficulty) {
     }
   }
 }
+
+// show a puzzle on initial load
+generatePuzzle();
