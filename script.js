@@ -246,11 +246,9 @@ function generatePuzzle(difficulty = currentDifficulty) {
   stopTimer();
   if (timerElem) timerElem.textContent = "Time: 00:00";
 
-  if (fullBoard.length !== size) {
-    fullBoard = generateFullBoard(size);
-    const { removed } = createPuzzleFromFull(fullBoard);
-    puzzlesByDifficulty = createDifficultyBoards(fullBoard, removed);
-  }
+  fullBoard = generateFullBoard(size);
+  const { removed } = createPuzzleFromFull(fullBoard);
+  puzzlesByDifficulty = createDifficultyBoards(fullBoard, removed);
 
   renderBoard(puzzlesByDifficulty[difficulty]);
 }

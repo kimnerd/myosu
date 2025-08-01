@@ -48,3 +48,9 @@ button {
   cursor: pointer;
   user-select: none;
 }
+
+#rules {
+  max-width: 600px;
+  margin: 2rem auto;
+  text-align: left;
+}
