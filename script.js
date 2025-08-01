@@ -23,22 +23,3 @@ function generatePuzzle(difficulty = currentDifficulty) {
   }
   boardElem.innerHTML = "";
   boardElem.style.gridTemplateColumns = `repeat(${boardSize}, 48px)`;
-
-  for (let r = 0; r < boardSize; r++) {
-    for (let c = 0; c < boardSize; c++) {
-      const cell = document.createElement("div");
-      cell.className = "cell";
-      const val = puzzle[r][c];
-      cell.textContent = val || "";
-      cell.onclick = () => {
-        if (cell.textContent === "") cell.textContent = "⚪";
-        else if (cell.textContent === "⚪") cell.textContent = "⚫";
-        else cell.textContent = "";
-      };
-      boardElem.appendChild(cell);
-    }
-  }
-}
-
-// show a puzzle on initial load
-generatePuzzle();
