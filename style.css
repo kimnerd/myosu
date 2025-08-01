@@ -26,6 +26,11 @@ button {
   cursor: pointer;
 }
 
+#timer {
+  margin: 1rem 0;
+  font-size: 1.2rem;
+}
+
 #board {
   display: grid;
   justify-content: center;

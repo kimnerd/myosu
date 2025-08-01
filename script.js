@@ -5,6 +5,10 @@ let currentDifficulty = "easy";
 let fullBoard = [];
 let puzzlesByDifficulty = { easy: [], medium: [], hard: [] };
 
+const timerElem = document.getElementById("timer");
+let timerStart = null;
+let timerInterval = null;
+
 sizeSelect.addEventListener("change", () => {
   // regenerate when board size changes
   fullBoard = [];
@@ -24,6 +28,50 @@ function shuffle(arr) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
+}
+
+function startTimer() {
+  if (timerInterval) return;
+  timerStart = Date.now();
+  timerElem.textContent = "Time: 00:00";
+  timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - timerStart) / 1000);
+    const minutes = String(Math.floor(elapsed / 60)).padStart(2, "0");
+    const seconds = String(elapsed % 60).padStart(2, "0");
+    timerElem.textContent = `Time: ${minutes}:${seconds}`;
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+
+function getCurrentBoard() {
+  const cells = boardElem.querySelectorAll(".cell");
+  const size = Math.sqrt(cells.length);
+  const board = [];
+  for (let r = 0; r < size; r++) {
+    board[r] = [];
+    for (let c = 0; c < size; c++) {
+      board[r][c] = cells[r * size + c].textContent || "";
+    }
+  }
+  return board;
+}
+
+function checkSolved() {
+  const board = getCurrentBoard();
+  for (let r = 0; r < board.length; r++) {
+    for (let c = 0; c < board.length; c++) {
+      if (board[r][c] !== fullBoard[r][c]) return false;
+    }
+  }
+  stopTimer();
+  alert("congratulation!");
+  return true;
 }
 
 function isValid(board, row, col, val) {
@@ -175,9 +223,15 @@ function renderBoard(board) {
       }
       cell.onclick = () => {
         if (!cell.dataset.fixed) {
-          if (cell.textContent === "") cell.textContent = "⚪";
-          else if (cell.textContent === "⚪") cell.textContent = "⚫";
-          else cell.textContent = "";
+          if (cell.textContent === "") {
+            cell.textContent = "⚪";
+            if (!timerInterval) startTimer();
+          } else if (cell.textContent === "⚪") {
+            cell.textContent = "⚫";
+          } else {
+            cell.textContent = "";
+          }
+          checkSolved();
         }
       };
       boardElem.appendChild(cell);
@@ -188,6 +242,9 @@ function renderBoard(board) {
 function generatePuzzle(difficulty = currentDifficulty) {
   currentDifficulty = difficulty;
   const size = parseInt(sizeSelect.value, 10);
+
+  stopTimer();
+  if (timerElem) timerElem.textContent = "Time: 00:00";
 
   if (fullBoard.length !== size) {
     fullBoard = generateFullBoard(size);
