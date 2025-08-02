@@ -133,6 +133,7 @@ function checkSolved() {
   }
   stopTimer();
   alert("congratulation!");
+  generatePuzzle(currentDifficulty);
   return true;
 }
 
