@@ -211,7 +211,12 @@ function createDifficultyBoards(full, removed) {
 function renderBoard(board) {
   const size = board.length;
   boardElem.innerHTML = "";
-  boardElem.style.gridTemplateColumns = `repeat(${size}, 48px)`;
+  const maxBoard = Math.min(window.innerWidth, window.innerHeight) * 0.9;
+  const cellSize = Math.floor(maxBoard / size);
+  const boardSize = cellSize * size;
+  boardElem.style.width = boardSize + "px";
+  boardElem.style.height = boardSize + "px";
+  boardElem.style.gridTemplateColumns = `repeat(${size}, ${cellSize}px)`;
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
       const cell = document.createElement("div");
@@ -221,6 +226,10 @@ function renderBoard(board) {
         cell.textContent = val;
         cell.dataset.fixed = "true";
       }
+      cell.style.width = cellSize + "px";
+      cell.style.height = cellSize + "px";
+      cell.style.lineHeight = cellSize + "px";
+      cell.style.fontSize = Math.floor(cellSize * 0.6) + "px";
       cell.onclick = () => {
         if (!cell.dataset.fixed) {
           if (cell.textContent === "") {
