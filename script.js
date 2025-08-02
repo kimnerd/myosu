@@ -9,6 +9,68 @@ const timerElem = document.getElementById("timer");
 let timerStart = null;
 let timerInterval = null;
 
+// Hint toggle
+let hintsEnabled = false;
+
+function toggleHints() {
+  hintsEnabled = !hintsEnabled;
+  const btn = document.getElementById("hintToggle");
+  if (btn) btn.textContent = hintsEnabled ? "Hints: On" : "Hints: Off";
+  applyHints();
+}
+
+function applyHints() {
+  const cells = boardElem.querySelectorAll(".cell");
+  cells.forEach((cell) => cell.classList.remove("hint"));
+  if (!hintsEnabled) return;
+
+  const size = Math.sqrt(cells.length);
+  const board = getCurrentBoard();
+  const half = size / 2;
+
+  // Row checks
+  for (let r = 0; r < size; r++) {
+    const row = board[r];
+    let violation = false;
+    const countWhite = row.filter((v) => v === "⚪").length;
+    const countBlack = row.filter((v) => v === "⚫").length;
+    if (countWhite > half || countBlack > half) violation = true;
+    for (let c = 2; c < size && !violation; c++) {
+      if (row[c] !== "" && row[c] === row[c - 1] && row[c] === row[c - 2]) {
+        violation = true;
+      }
+    }
+    if (violation) {
+      for (let c = 0; c < size; c++) {
+        cells[r * size + c].classList.add("hint");
+      }
+    }
+  }
+
+  // Column checks
+  for (let c = 0; c < size; c++) {
+    let violation = false;
+    const column = board.map((row) => row[c]);
+    const countWhite = column.filter((v) => v === "⚪").length;
+    const countBlack = column.filter((v) => v === "⚫").length;
+    if (countWhite > half || countBlack > half) violation = true;
+    for (let r = 2; r < size && !violation; r++) {
+      if (
+        column[r] !== "" &&
+        column[r] === column[r - 1] &&
+        column[r] === column[r - 2]
+      ) {
+        violation = true;
+      }
+    }
+    if (violation) {
+      for (let r = 0; r < size; r++) {
+        cells[r * size + c].classList.add("hint");
+      }
+    }
+  }
+}
+
 sizeSelect.addEventListener("change", () => {
   // regenerate when board size changes
   fullBoard = [];
@@ -241,11 +303,13 @@ function renderBoard(board) {
             cell.textContent = "";
           }
           checkSolved();
+          applyHints();
         }
       };
       boardElem.appendChild(cell);
     }
   }
+  applyHints();
 }
 
 function generatePuzzle(difficulty = currentDifficulty) {
