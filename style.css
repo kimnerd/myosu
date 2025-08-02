@@ -37,6 +37,7 @@ button {
   gap: 4px;
   /* Add extra bottom margin so the rules don't overlap the board, especially on phones */
   margin: 1rem auto 6rem;
+
   touch-action: manipulation;
   width: min(90vmin, 480px);
   height: min(90vmin, 480px);
