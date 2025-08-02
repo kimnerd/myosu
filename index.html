@@ -14,15 +14,16 @@
   <h1>Myosu</h1>
   <p class="subtitle">The Logic of Stones</p>
 
-  <div class="buttons">
-    <button onclick="generatePuzzle('easy')">Easy</button>
-    <button onclick="generatePuzzle('medium')">Medium</button>
-    <button onclick="generatePuzzle('hard')">Hard</button>
-    <button id="hintToggle" onclick="toggleHints()">Hints: Off</button>
-    <label for="sizeSelect">Size:</label>
-    <select id="sizeSelect">
-      <option value="6">6x6</option>
-      <option value="8">8x8</option>
+    <div class="buttons">
+      <button onclick="generatePuzzle('easy')">Easy</button>
+      <button onclick="generatePuzzle('medium')">Medium</button>
+      <button onclick="generatePuzzle('hard')">Hard</button>
+      <button onclick="undo()">Undo</button>
+      <button id="hintToggle" onclick="toggleHints()">Hints: Off</button>
+      <label for="sizeSelect">Size:</label>
+      <select id="sizeSelect">
+        <option value="6">6x6</option>
+        <option value="8">8x8</option>
       <option value="10">10x10</option>
     </select>
   </div>

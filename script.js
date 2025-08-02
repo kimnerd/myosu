@@ -11,6 +11,7 @@ let timerInterval = null;
 
 // Hint toggle
 let hintsEnabled = false;
+let moveHistory = [];
 
 function toggleHints() {
   hintsEnabled = !hintsEnabled;
@@ -69,6 +70,14 @@ function applyHints() {
       }
     }
   }
+}
+
+function undo() {
+  const last = moveHistory.pop();
+  if (!last) return;
+  last.cell.textContent = last.prev;
+  checkSolved();
+  applyHints();
 }
 
 sizeSelect.addEventListener("change", () => {
@@ -295,6 +304,7 @@ function renderBoard(board) {
       cell.style.fontSize = Math.floor(cellSize * 0.6) + "px";
       cell.onclick = () => {
         if (!cell.dataset.fixed) {
+          moveHistory.push({ cell, prev: cell.textContent });
           if (cell.textContent === "") {
             cell.textContent = "⚪";
             if (!timerInterval) startTimer();
@@ -316,6 +326,7 @@ function renderBoard(board) {
 function generatePuzzle(difficulty = currentDifficulty) {
   currentDifficulty = difficulty;
   const size = parseInt(sizeSelect.value, 10);
+  moveHistory = [];
 
   stopTimer();
   if (timerElem) timerElem.textContent = "Time: 00:00";
