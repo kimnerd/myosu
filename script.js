@@ -70,6 +70,40 @@ function applyHints() {
       }
     }
   }
+
+  // Duplicate row checks
+  for (let r1 = 0; r1 < size; r1++) {
+    for (let r2 = r1 + 1; r2 < size; r2++) {
+      const row1 = board[r1];
+      const row2 = board[r2];
+      if (row1.includes("") || row2.includes("")) continue;
+      if (row1.join("") === row2.join("")) {
+        for (let c = 0; c < size; c++) {
+          cells[r1 * size + c].classList.add("hint");
+          cells[r2 * size + c].classList.add("hint");
+        }
+      }
+    }
+  }
+
+  // Duplicate column checks
+  for (let c1 = 0; c1 < size; c1++) {
+    for (let c2 = c1 + 1; c2 < size; c2++) {
+      const col1 = [];
+      const col2 = [];
+      for (let r = 0; r < size; r++) {
+        col1.push(board[r][c1]);
+        col2.push(board[r][c2]);
+      }
+      if (col1.includes("") || col2.includes("")) continue;
+      if (col1.join("") === col2.join("")) {
+        for (let r = 0; r < size; r++) {
+          cells[r * size + c1].classList.add("hint");
+          cells[r * size + c2].classList.add("hint");
+        }
+      }
+    }
+  }
 }
 
 function undo() {
