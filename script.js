@@ -1,6 +1,8 @@
 const boardElem = document.getElementById("board");
 const sizeSelect = document.getElementById("sizeSelect");
 
+const checkpointBtn = document.getElementById("checkpointBtn");
+
 let currentDifficulty = "easy";
 let fullBoard = [];
 let puzzlesByDifficulty = { easy: [], medium: [], hard: [] };
@@ -12,6 +14,7 @@ let timerInterval = null;
 // Hint toggle
 let hintsEnabled = false;
 let moveHistory = [];
+let checkpointState = null;
 
 function toggleHints() {
   hintsEnabled = !hintsEnabled;
@@ -113,6 +116,29 @@ function undo() {
   checkSolved();
   applyHints();
 }
+
+function toggleCheckpoint() {
+  if (!checkpointState) {
+    checkpointState = getCurrentBoard();
+    checkpointBtn.textContent = "Rollback";
+  } else {
+    const size = checkpointState.length;
+    const cells = boardElem.querySelectorAll(".cell");
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        cells[r * size + c].textContent = checkpointState[r][c];
+      }
+    }
+    checkpointState = null;
+    moveHistory = [];
+    checkpointBtn.textContent = "Set Checkpoint";
+    checkSolved();
+    applyHints();
+  }
+}
+
+checkpointBtn.addEventListener("click", toggleCheckpoint);
+
 
 sizeSelect.addEventListener("change", () => {
   // regenerate when board size changes
@@ -361,6 +387,9 @@ function generatePuzzle(difficulty = currentDifficulty) {
   currentDifficulty = difficulty;
   const size = parseInt(sizeSelect.value, 10);
   moveHistory = [];
+
+  checkpointState = null;
+  if (checkpointBtn) checkpointBtn.textContent = "Set Checkpoint";
 
   stopTimer();
   if (timerElem) timerElem.textContent = "Time: 00:00";
